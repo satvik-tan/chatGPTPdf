@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT PDF Converter</title>
+</head>
+<body>
+    <h1>ChatGPT PDF Converter</h1>
+    <form id="pdfForm">
+        <label for="link">ChatGPT Conversation Link:</label>
+        <input type="text" id="link" name="link" placeholder="Enter link" required>
+        <button type="submit">Generate PDF</button>
+    </form>
+
+    <script>
+        document.getElementById('pdfForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const link = document.getElementById('link').value;
+            const response = await fetch('http://localhost:3000/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ link }),
+            });
+
+            if (response.ok) {
+                const blob = await response.blob(); // Get the PDF as a blob
+                const url = URL.createObjectURL(blob); // Create a URL for the blob
+                const linkElement = document.createElement('a');
+                linkElement.href = url;
+                linkElement.download = 'chatgpt-conversation.pdf'; // Set the filename
+                linkElement.click(); // Simulate a click to download the file
+                URL.revokeObjectURL(url); // Clean up the object URL
+            } else {
+                alert('Failed to generate PDF. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
