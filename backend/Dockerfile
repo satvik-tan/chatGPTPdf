@@ -1,46 +1,35 @@
-FROM ghcr.io/puppeteer/puppeteer:23.9.0
+# Use the official Node.js image as the base image
+FROM node:18-slim
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Install necessary dependencies for running Chrome
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    gnupg \
-    ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    libnss3 \
-    libx11-xcb1 \
-    libgbm1 \
-    libvulkan1 \
-    libasound2 \
-    libcurl4 \
-    libdrm2 \
-    xdg-utils \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+# We don't need the standalone Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-# Add Google Chrome's repository
-RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google.asc
-RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+# Install Google Chrome Stable and fonts
+# Note: this installs the necessary libs to make the browser work with Puppeteer.
+RUN apt-get update && apt-get install gnupg wget -y && \
+    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update && \
+    apt-get install google-chrome-stable -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome
-RUN apt-get update && apt-get install -y google-chrome-stable --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+# Verify that Chrome is installed at the expected location
+RUN ls -alh /usr/bin/google-chrome-stable && \
+    /usr/bin/google-chrome-stable --version
 
-# Set the environment variable for Puppeteer to use the installed Chrome
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
-# Install any node dependencies (npm ci will only install exact versions specified in package-lock.json)
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm ci
 
-# Copy the rest of your application files
+# Install app dependencies including Puppeteer
+RUN npm install
+
+# Bundle app source code
 COPY . .
 
-# Expose the port the app will run on
+# Expose the port on which your app will run
 EXPOSE 3000
 
 # Start the application
