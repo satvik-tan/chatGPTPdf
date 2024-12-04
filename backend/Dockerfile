@@ -1,11 +1,7 @@
-FROM ghcr.io/puppeteer/puppeteer:23.9.0
+FROM node:18-slim
 
-# Set environment variables to skip Chromium download and use a pre-installed Chrome
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
-# Install necessary dependencies for Chrome to work properly in the container
-RUN apt-get update && apt-get install -y \
+# Update apt-get and install dependencies
+RUN apt-get update -y && apt-get install -y \
     wget \
     ca-certificates \
     fonts-liberation \
@@ -16,20 +12,21 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and install the latest stable version of Google Chrome
+# Download and install Google Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb \
-    && apt-get -f install -y \
+    && apt-get install -f -y \
     && rm google-chrome-stable_current_amd64.deb
 
+# Set up the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and install dependencies
+# Copy package.json and install node dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the app
+# Copy the rest of your application
 COPY . .
 
-# Run your server
+# Default command to run when the container starts
 CMD ["node", "server.js"]
