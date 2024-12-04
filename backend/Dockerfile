@@ -1,32 +1,16 @@
-FROM node:18-slim
+FROM ghcr.io/puppeteer/puppeteer:23.9.0
 
-# Update apt-get and install dependencies
-RUN apt-get update -y && apt-get install -y \
-    wget \
-    ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    libnss3 \
-    lsb-release \
-    xdg-utils \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
-# Download and install Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb || true \
-    && apt-get install -f -y \
-    && rm google-chrome-stable_current_amd64.deb
-
-# Set up the working directory
+# Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and install node dependencies
+# Install any dependencies you need (if applicable)
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of your application
+# Copy your application files
 COPY . .
 
-# Default command to run when the container starts
+# Start the application
 CMD ["node", "server.js"]
+# Expose the port the app runs on
+EXPOSE 3000
