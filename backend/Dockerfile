@@ -14,7 +14,7 @@ RUN apt-get update -y && apt-get install -y \
 
 # Download and install Google Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb \
+    && dpkg -i google-chrome-stable_current_amd64.deb || true \
     && apt-get install -f -y \
     && rm google-chrome-stable_current_amd64.deb
 
