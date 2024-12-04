@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const puppeteer = require("puppeteer");
 const cors = require("cors");
 const app = express();
@@ -22,6 +23,7 @@ app.post("/convert", async (req, res) => {
   try {
     // Launch Puppeteer
     const browser = await puppeteer.launch({
+      executablePath: process.env.NODE_ENV === 'production' ? PUPPETEER_EXECUTABLE_PATH :puppeteer.executablePath(), // Use the provided executable path
       headless: true, // Runs in the background
       args: ["--no-sandbox", "--disable-setuid-sandbox"], // Needed for environments like Docker
     });
