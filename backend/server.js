@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(cors({ origin: '*' })); // Allow all origins or specify your frontend domain
+app.use(cors({ origin: 'https://chatgpt-to-pdf.netlify.app' })); 
 
 app.get("/", (req, res) => {
   res.send("Server is running.");
@@ -48,7 +48,7 @@ app.post("/convert", async (req, res) => {
     // Set content and create the PDF using Puppeteer
     await page.setContent(chatContent);
 
-    // Generate the PDF as a buffer (do not save to file system)
+    // Generate the PDF as a buffer 
     const outputPdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
@@ -57,7 +57,7 @@ app.post("/convert", async (req, res) => {
     // Close the browser
     await browser.close();
 
-    // Set the correct headers for file download
+    // Set the correct headers 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=ChatGPT_Conversation.pdf");
 
