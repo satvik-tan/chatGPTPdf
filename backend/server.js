@@ -4,7 +4,8 @@ const cors = require("cors");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+const cors = require('cors');
+app.use(cors({ origin: '*' })); // Allow all origins or specify your frontend domain
 
 app.get("/", (req, res) => {
   res.send("Server is running.");
