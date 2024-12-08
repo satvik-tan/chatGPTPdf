@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatGPT PDF Converter</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>ChatGPT PDF Converter</h1>
     <form id="pdfForm">
         <label for="link">ChatGPT Conversation Link:</label>
         <input type="text" id="link" name="link" placeholder="Enter link" required>
-        <button type="submit">Generate PDF</button>
+        <button onclick="waiting()" type="submit">Generate PDF</button>
     </form>
 
     <script>
+        const waiting = () => {
+            const head = document.getElementsByTagName('h1');
+            head[0].innerText = 'Please wait while we generate the PDF...';
+        }
+
+
         document.getElementById('pdfForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
