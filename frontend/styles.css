@@ -53,3 +53,9 @@ button:hover {
     background-color: #2980b9;
 }
 
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: #2c3e50;
+}
