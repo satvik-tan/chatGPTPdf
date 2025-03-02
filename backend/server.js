@@ -30,7 +30,7 @@ app.post("/convert", async (req, res) => {
     const page = await browser.newPage();
 
     // Navigate to the provided link
-    await page.goto(link, { waitUntil: "networkidle2" });
+    await page.goto(link, { waitUntil: "networkidle2", timeout: 60000 });
 
     // Extract conversation content
     const chatContent = await page.evaluate(() => {
