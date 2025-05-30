@@ -7,4 +7,4 @@
 - 📥 Export entire ChatGPT chats to PDF with a click
 - 🎨 Clean and readable formatting for both user and assistant messages
 - 💻 Fully web-based — no installation required
-- ⚡ Fast, lightweight, and intuitive UI
+- ⚡ Fast, lightweight, and nice UI
