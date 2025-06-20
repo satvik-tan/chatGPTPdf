@@ -1,0 +1,15 @@
+{
+  "name": "browser-worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "dependencies": {
+    "hono": "^4.8.1"
+  },
+  "devDependencies": {
+    "@cloudflare/puppeteer": "^1.0.2",
+    "wrangler": "^4.4.0"
+  }
+}
